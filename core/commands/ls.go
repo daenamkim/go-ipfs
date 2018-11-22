@@ -14,6 +14,7 @@ import (
 	uio "gx/ipfs/QmUnHNqhSB1JgzVCxL1Kz3yb4bdyB4q1Z9AD5AUBVmt3fZ/go-unixfs/io"
 	unixfspb "gx/ipfs/QmUnHNqhSB1JgzVCxL1Kz3yb4bdyB4q1Z9AD5AUBVmt3fZ/go-unixfs/pb"
 	blockservice "gx/ipfs/QmVDTbzzTwnuBwNbJdhW3u7LoBQp46bezm9yp4z1RoEepM/go-blockservice"
+	cidenc "gx/ipfs/QmVjZoEZg2oxXGFGjbD28x3gGN6ALHAW6BN2LKRUcaJ21i/go-cidutil/cidenc"
 	offline "gx/ipfs/QmYZwey1thDTynSrvd6qQkX24UpTka6TFhQ2v569UpoqxD/go-ipfs-exchange-offline"
 	cmds "gx/ipfs/Qma6uuSyjkecGhMFFLfzyJDPyoDtNJSHJNweDccZhaWkgU/go-ipfs-cmds"
 	merkledag "gx/ipfs/QmcGt25mrjuB2kKW2zhPbXVZNHc4yoTDQ65NA8m6auP2f1/go-merkledag"
@@ -91,8 +92,12 @@ The JSON output contains type information.
 		if err != nil {
 			return err
 		}
-
 		paths := req.Arguments
+
+		enc, err := cmdenv.ProcCidBase(req)
+		if err != nil {
+			return err
+		}
 
 		var dagnodes []ipld.Node
 		for _, fpath := range paths {
@@ -131,7 +136,7 @@ The JSON output contains type information.
 				}
 				outputLinks := make([]LsLink, len(links))
 				for j, link := range links {
-					lsLink, err := makeLsLink(req, dserv, resolve, link)
+					lsLink, err := makeLsLink(req, dserv, resolve, link, enc)
 					if err != nil {
 						return err
 					}
@@ -165,7 +170,7 @@ The JSON output contains type information.
 					return linkResult.Err
 				}
 				link := linkResult.Link
-				lsLink, err := makeLsLink(req, dserv, resolve, link)
+				lsLink, err := makeLsLink(req, dserv, resolve, link, enc)
 				if err != nil {
 					return err
 				}
@@ -224,7 +229,7 @@ func makeDagNodeLinkResults(req *cmds.Request, dagnode ipld.Node) <-chan unixfs.
 	return linkResults
 }
 
-func makeLsLink(req *cmds.Request, dserv ipld.DAGService, resolve bool, link *ipld.Link) (*LsLink, error) {
+func makeLsLink(req *cmds.Request, dserv ipld.DAGService, resolve bool, link *ipld.Link, enc cidenc.Interface) (*LsLink, error) {
 	t := unixfspb.Data_DataType(-1)
 
 	switch link.Cid.Type() {
@@ -250,7 +255,7 @@ func makeLsLink(req *cmds.Request, dserv ipld.DAGService, resolve bool, link *ip
 	}
 	return &LsLink{
 		Name: link.Name,
-		Hash: link.Cid.String(),
+		Hash: enc.Encode(link.Cid),
 		Size: link.Size,
 		Type: t,
 	}, nil

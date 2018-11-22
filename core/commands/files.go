@@ -19,6 +19,7 @@ import (
 	ft "gx/ipfs/QmUnHNqhSB1JgzVCxL1Kz3yb4bdyB4q1Z9AD5AUBVmt3fZ/go-unixfs"
 	mfs "gx/ipfs/QmV8mXUh1M9qztax7vVdL1Apuz4c1eJZC5YactGxaJfWom/go-mfs"
 	bservice "gx/ipfs/QmVDTbzzTwnuBwNbJdhW3u7LoBQp46bezm9yp4z1RoEepM/go-blockservice"
+	cidenc "gx/ipfs/QmVjZoEZg2oxXGFGjbD28x3gGN6ALHAW6BN2LKRUcaJ21i/go-cidutil/cidenc"
 	offline "gx/ipfs/QmYZwey1thDTynSrvd6qQkX24UpTka6TFhQ2v569UpoqxD/go-ipfs-exchange-offline"
 	cmds "gx/ipfs/Qma6uuSyjkecGhMFFLfzyJDPyoDtNJSHJNweDccZhaWkgU/go-ipfs-cmds"
 	dag "gx/ipfs/QmcGt25mrjuB2kKW2zhPbXVZNHc4yoTDQ65NA8m6auP2f1/go-merkledag"
@@ -136,6 +137,11 @@ var filesStatCmd = &cmds.Command{
 
 		withLocal, _ := req.Options[filesWithLocalOptionName].(bool)
 
+		enc, err := cmdenv.ProcCidBase(req)
+		if err != nil {
+			return err
+		}
+
 		var dagserv ipld.DAGService
 		if withLocal {
 			// an offline DAGService will not fetch from the network
@@ -152,7 +158,7 @@ var filesStatCmd = &cmds.Command{
 			return err
 		}
 
-		o, err := statNode(nd)
+		o, err := statNode(nd, enc)
 		if err != nil {
 			return err
 		}
@@ -217,7 +223,7 @@ func statGetFormatOptions(req *cmds.Request) (string, error) {
 	}
 }
 
-func statNode(nd ipld.Node) (*statOutput, error) {
+func statNode(nd ipld.Node, enc cidenc.Interface) (*statOutput, error) {
 	c := nd.Cid()
 
 	cumulsize, err := nd.Size()
@@ -243,7 +249,7 @@ func statNode(nd ipld.Node) (*statOutput, error) {
 		}
 
 		return &statOutput{
-			Hash:           c.String(),
+			Hash:           enc.Encode(c),
 			Blocks:         len(nd.Links()),
 			Size:           d.FileSize(),
 			CumulativeSize: cumulsize,
@@ -251,7 +257,7 @@ func statNode(nd ipld.Node) (*statOutput, error) {
 		}, nil
 	case *dag.RawNode:
 		return &statOutput{
-			Hash:           c.String(),
+			Hash:           enc.Encode(c),
 			Blocks:         0,
 			Size:           cumulsize,
 			CumulativeSize: cumulsize,
@@ -433,6 +439,11 @@ Examples:
 
 		long, _ := req.Options[longOptionName].(bool)
 
+		enc, err := cmdenv.ProcCidBase(req)
+		if err != nil {
+			return err
+		}
+
 		switch fsn := fsn.(type) {
 		case *mfs.Directory:
 			if !long {
@@ -470,7 +481,7 @@ Examples:
 				if err != nil {
 					return err
 				}
-				out.Entries[0].Hash = nd.Cid().String()
+				out.Entries[0].Hash = enc.Encode(nd.Cid())
 			}
 			return cmds.EmitOnce(res, out)
 		default:
