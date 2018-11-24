@@ -8,8 +8,8 @@ import (
 	coreiface "github.com/ipfs/go-ipfs/core/coreapi/interface"
 	"github.com/ipfs/go-ipfs/core/coreapi/interface/options"
 
+	"gx/ipfs/QmVKobNrLGkvfUPtnku5fdm4nCrd7fpTFCsA69JazgTCQa/go-ipfs-cmds"
 	"gx/ipfs/Qmde5VP1qUkyQXKCfmEUA7bP64V2HAptbJ7phuPp7jXWwg/go-ipfs-cmdkit"
-	"gx/ipfs/QmdevNYZQQnkfH8Z1kBaQLW9x4w7LGDxg5h5gMXEGimKvr/go-ipfs-cmds"
 )
 
 var ObjectPatchCmd = &cmds.Command{
@@ -60,7 +60,7 @@ the limit will not be respected by the network.
 			return err
 		}
 
-		it, _ := req.Files.Entries()
+		it := req.Files.Entries()
 		if !it.Next() && it.Err() != nil {
 			return it.Err()
 		}
@@ -110,7 +110,7 @@ Example:
 			return err
 		}
 
-		it, _ := req.Files.Entries()
+		it := req.Files.Entries()
 		if !it.Next() && it.Err() != nil {
 			return it.Err()
 		}

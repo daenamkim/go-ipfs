@@ -19,7 +19,6 @@ import (
 	coremock "github.com/ipfs/go-ipfs/core/mock"
 
 	u "gx/ipfs/QmNohiVssaPw3KVLZik59DBVGTSm2dGvYT9eoXt5DQ36Yz/go-ipfs-util"
-	files "gx/ipfs/QmQkUXH7YcgPypNsKEL7X13a1HSP3VcmpLMbY817TgjTMp/go-ipfs-files"
 	chunker "gx/ipfs/QmR4QQVkBZsZENRjYFVi8dEtPL3daZRNKk24m4r6WKJHNm/go-ipfs-chunker"
 	fstest "gx/ipfs/QmSJBsmLP1XMjv8hxYg2rUMdPDB7YUpyBo9idjrJ6Cmq6F/fuse/fs/fstestutil"
 	importer "gx/ipfs/QmYKKP9p8vjKuJkvR6mC62wwqW9ZUW4hTE6ox7cUagoixS/go-unixfs/importer"
@@ -27,6 +26,7 @@ import (
 	ci "gx/ipfs/QmZXjR5X1p4KrQ967cTsy4MymMzUM8mZECF3PV8UcN4o3g/go-testutil/ci"
 	dag "gx/ipfs/QmcGt25mrjuB2kKW2zhPbXVZNHc4yoTDQ65NA8m6auP2f1/go-merkledag"
 	ipld "gx/ipfs/QmcKKBwfz6FyQdHR2jsXrrF6XeSBXYL86anmWNewpFpoF5/go-ipld-format"
+	files "gx/ipfs/QmeaQRmnRog7NxLEWHP9zSTkics4cbgwBVa7q49LmBowDr/go-ipfs-files"
 )
 
 func maybeSkipFuseTests(t *testing.T) {
