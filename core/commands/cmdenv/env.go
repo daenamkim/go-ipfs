@@ -7,7 +7,7 @@ import (
 	"github.com/ipfs/go-ipfs/core"
 	coreiface "github.com/ipfs/go-ipfs/core/coreapi/interface"
 
-	cmds "gx/ipfs/QmVKobNrLGkvfUPtnku5fdm4nCrd7fpTFCsA69JazgTCQa/go-ipfs-cmds"
+	cmds "gx/ipfs/QmT7zdrgdq7LD5YwWzEwnFdMf2B9Jpbbx6A6zERWEDxLGA/go-ipfs-cmds"
 	config "gx/ipfs/QmbK4EmM2Xx5fmbqK38TGP3PpY66r3tkXLZTcc7dF9mFwM/go-ipfs-config"
 )
 

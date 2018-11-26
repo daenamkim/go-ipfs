@@ -5,7 +5,7 @@ import (
 
 	oldcmds "github.com/ipfs/go-ipfs/commands"
 
-	"gx/ipfs/QmVKobNrLGkvfUPtnku5fdm4nCrd7fpTFCsA69JazgTCQa/go-ipfs-cmds"
+	"gx/ipfs/QmT7zdrgdq7LD5YwWzEwnFdMf2B9Jpbbx6A6zERWEDxLGA/go-ipfs-cmds"
 	logging "gx/ipfs/QmcuXC5cxs79ro2cUuHs4HQ2bkDLJUYokwL8aivcX6HW3C/go-log"
 )
 
